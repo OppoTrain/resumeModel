@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>AI Image Generator</h1>
+        <form id="image-form">
+            <input type="text" id="prompt" placeholder="Enter a prompt" required>
+            <button type="submit">Generate Image</button>
+        </form>
+        <div id="result">
+            <h2>Generated Image:</h2>
+            <img id="generated-image" src="" alt="Generated Image" style="display: none;">
+            <p id="error-message" style="color: red;"></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('image-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const prompt = document.getElementById('prompt').value;
+            const response = await fetch('/generate-image', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ prompt }),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                const image = data.image_data;
+                const imgElement = document.getElementById('generated-image');
+                imgElement.src = 'data:image/png;base64,' + image;
+                imgElement.style.display = 'block';
+                document.getElementById('error-message').textContent = '';
+            } else {
+                document.getElementById('error-message').textContent = data.error;
+                document.getElementById('generated-image').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
