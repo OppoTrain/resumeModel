@@ -1,8 +1,11 @@
 import os
 import PyPDF2
 from together import Together
+from dotenv import load_dotenv
 
-api_key = os.getenv("TOGETHER_API_KEY")
+
+load_dotenv()
+api_key = os.getenv('TOGETHER_API_KEY')
 if not api_key:
     raise ValueError("API key not found. Please set TOGETHER_API_KEY environment variable.")
 client = Together(api_key=api_key)
