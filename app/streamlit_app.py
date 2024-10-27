@@ -16,7 +16,7 @@ if st.button("Analyze Resume"):
         
         if response.status_code == 200:
             # Display the career suggestions returned from the FastAPI app
-            career_suggestions = response.json().get("career_suggestions")
+            career_suggestions = response.json().get("recommendations")  # Updated key
             st.success("Career Suggestions:")
             st.text(career_suggestions)
         else:
