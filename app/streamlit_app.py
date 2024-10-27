@@ -1,26 +1,43 @@
+# app/main.py
 import streamlit as st
-import requests
+from utils import extract_text_from_pdf,analyze_resume_with_llama3
 
-# Set the title of the Streamlit app
-st.title("Resume Analyzer")
+def main():
+    st.sidebar.title("Navigation")
+    page = st.sidebar.selectbox("Choose a page", ("Home", "Upload Resume", "About"))
 
-# File uploader for the PDF resume
-uploaded_file = st.file_uploader("Upload your resume (PDF)", type="pdf")
+    if page == "Home":
+        st.title("Welcome to the Resume Analyzer!")
+        st.write("This application allows you to analyze your resume.")
 
-# Button to analyze the resume
-if st.button("Analyze Resume"):
-    if uploaded_file is not None:
-        # Send the uploaded file to your FastAPI endpoint
-        files = {"resume": (uploaded_file.name, uploaded_file, "application/pdf")}
-        response = requests.post("http://127.0.0.1:8000/analyze_resume", files=files)
-        
-        if response.status_code == 200:
-            # Display the career suggestions returned from the FastAPI app
-            career_suggestions = response.json().get("career_suggestions")
+    elif page == "Upload Resume":
+        upload_resume()
+
+    elif page == "About":
+        st.title("About")
+        st.write("This app analyzes resumes and provides career suggestions.")
+
+def upload_resume():
+    st.title("Resume Analyzer")
+    
+    uploaded_file = st.file_uploader("Upload your resume (PDF)", type="pdf")
+
+    if st.button("Analyze Resume"):
+        if uploaded_file is not None:
+            # Read the uploaded PDF file data
+            file_data = uploaded_file.getvalue()
+
+            # Extract text from the uploaded PDF
+            resume_text = extract_text_from_pdf(file_data)
+
+            # Analyze resume text
+            career_suggestions = analyze_resume_with_llama3(resume_text)
+            
+            # Display the results
             st.success("Career Suggestions:")
             st.text(career_suggestions)
         else:
-            # Display error message
-            st.error(f"Error: {response.json().get('error')}")
-    else:
-        st.warning("Please upload a PDF resume.")
+            st.warning("Please upload a PDF resume.")
+
+if __name__ == "__main__":
+    main()

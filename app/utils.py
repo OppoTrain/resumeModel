@@ -1,5 +1,6 @@
 import os
 import PyPDF2
+from io import BytesIO
 from together import Together
 from dotenv import load_dotenv
 
@@ -11,8 +12,8 @@ if not api_key:
 client = Together(api_key=api_key)
 
 # Function to extract text from uploaded PDF
-def extract_text_from_pdf(pdf_path):
-    with open(pdf_path, "rb") as file:
+def extract_text_from_pdf(pdf_data):
+    with BytesIO(pdf_data) as file:
         reader = PyPDF2.PdfReader(file)
         text = ""
         for page in reader.pages:
