@@ -12,7 +12,7 @@ if st.button("Analyze Resume"):
     if uploaded_file is not None:
         # Send the uploaded file to your FastAPI endpoint
         files = {"resume": (uploaded_file.name, uploaded_file, "application/pdf")}
-        response = requests.post("http://127.0.0.1:8000/analyze_resume", files=files)
+        response = requests.post("https://models-elrn.onrender.com/recommend", files=files)
         
         if response.status_code == 200:
             # Display the career suggestions returned from the FastAPI app
