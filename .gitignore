@@ -1,0 +1,9 @@
+client/__pycache__/
+client/*.pyc
+client/.env
+client/venv/
+server/__pycache__/
+server/*.pyc
+server/.env
+server/venv/
+
