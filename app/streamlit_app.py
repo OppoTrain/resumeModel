@@ -15,12 +15,18 @@ if st.button("Analyze Resume"):
         response = requests.post("https://models-elrn.onrender.com/recommend", files=files)
         
         if response.status_code == 200:
-            # Display the career suggestions returned from the FastAPI app
-            career_suggestions = response.json().get("recommendations")  # Updated key
-            st.success("Career Suggestions:")
-            st.text(career_suggestions)
+            # Retrieve and display the career suggestions from the FastAPI response
+            career_suggestions = response.json().get("recommendations")
+            
+            # Ensure the recommendations are a string before displaying
+            if isinstance(career_suggestions, str):
+                st.success("Career Suggestions:")
+                st.markdown(f'<div class="recommendation">{career_suggestions}</div>', unsafe_allow_html=True)
+            else:
+                st.write("No recommendations available.")
         else:
             # Display error message
-            st.error(f"Error: {response.json().get('error')}")
+            error_message = response.json().get('error', 'Unexpected error occurred')
+            st.error(f"Error: {error_message}")
     else:
         st.warning("Please upload a PDF resume.")
