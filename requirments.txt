@@ -3,3 +3,4 @@ PyPDF2==3.0.1
 together
 Werkzeug==2.0.3
 python-dotenv
+gunicorn==20.1.0
